@@ -146,7 +146,7 @@ export interface ModalStaticFunctions {
     confirm: ModalFunc;
 }
 
-type ModalType = typeof OriginModal &
+export type ModalType = typeof OriginModal &
     ModalStaticFunctions & { destroyAll: () => void, config: typeof modalGlobalConfig };
 
 const Modal = OriginModal as ModalType;
