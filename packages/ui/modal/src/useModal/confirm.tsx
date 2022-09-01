@@ -58,26 +58,27 @@ export function withError(props: ModalFuncProps): ModalFuncProps {
     };
 }
 
+type ConfirmType ='success' | 'warn' | 'warning' | 'info' | 'error' | 'confirm';
+
+const confirmFunc: Record<ConfirmType, (props: ModalFuncProps) => ModalFuncProps> = {
+    success: withSuccess,
+    warn: withWarn,
+    warning: withWarn,
+    info: withInfo,
+    error: withError,
+    confirm: (props: ModalFuncProps) => {
+        return {
+            icon: <IconExclamationCircleFilled />,
+            okCancel: true,
+            ...props,
+            type: 'confirm',
+        };
+    },
+};
+
+// confirm根据type配置对应的ConfirmDialog
 export function withConfirm(props: ModalFuncProps): ModalFuncProps {
-    const {type} = props;
-    if (type === 'success') {
-        return withSuccess(props);
-    }
-    if (type === 'warning') {
-        return withWarn(props);
-    }
-    if (type === 'info') {
-        return withInfo(props);
-    }
-    if (type === 'error') {
-        return withError(props);
-    }
-    return {
-        icon: <IconExclamationCircleFilled />,
-        okCancel: true,
-        ...props,
-        type: 'confirm',
-    };
+    return confirmFunc[props.type ?? 'confirm'](props) ?? confirmFunc.confirm(props);
 }
 
 // export function modalGlobalConfig({rootPrefixCls}: { rootPrefixCls: string }) {
@@ -87,7 +88,7 @@ export function withConfirm(props: ModalFuncProps): ModalFuncProps {
 
 
 /**
- *  暂时用不到confirm
+ *  暂时用不到confirm，confirm用于一般的Modal组件
  * */
 // export default function confirm(config: ModalFuncProps) {
 //     const container = document.createDocumentFragment();
